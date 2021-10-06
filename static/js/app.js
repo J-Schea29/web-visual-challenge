@@ -1,28 +1,28 @@
-function buildMetaData(sample) {
-  d3.json("samples.json").then(function(data) {
-    var metaData = data.metadata;
-      console.log(metaData)
-    var resultArray = metaData.filter(function(data){
-      return data.id === sample;
-    })
-    console.log(resultArray);
+// function buildMetaData(sample) {
+//   d3.json("samples.json").then(function(data) {
+//     var metaData = data.metadata;
+//       console.log(metaData)
+//     var resultArray = metaData.filter(function(data){
+//       return data.id === sample;
+//     })
+//     console.log(resultArray);
 
-    var personID = resultArray.id
-    console.log(personID);
-    var ethnicity = resultArray.ethnicity
-    console.log(ethnicity);
-    var gender = resultArray.gender
-    console.log(gender);
-    var age = resultArray.age
-    console.log(age);
-    var location = resultArray.location
-    console.log(location);
-    var bbtype = resultArray.bbtype
-    console.log(bbtype);
-    var wfreq = resultArray.wfreq
-    console.log(wfreq);
-  })
-}
+//     var personID = resultArray.id
+//     console.log(personID);
+//     var ethnicity = resultArray.ethnicity
+//     console.log(ethnicity);
+//     var gender = resultArray.gender
+//     console.log(gender);
+//     var age = resultArray.age
+//     console.log(age);
+//     var location = resultArray.location
+//     console.log(location);
+//     var bbtype = resultArray.bbtype
+//     console.log(bbtype);
+//     var wfreq = resultArray.wfreq
+//     console.log(wfreq);
+//   })
+// }
 
 function buildCharts(sample) {
   d3.json("samples.json").then(function(data) {
@@ -41,25 +41,27 @@ function buildCharts(sample) {
     var yticks = otu_ids.slice(0, 10).map(function(otuID) {
       return `OTU ${otuID}`;
     }).reverse();
-    console.log(yticks)
+
+    var topTenSamples = sample_values.slice(0,10).reverse();
+    var topTenLabels = otu_labels.slice(0,10).reverse();
 
     // Charts
     // Bar Chart
     let barLayout = {
-      title: "Top 10 Bacteria Found",
+      title: "Top 10 Bacteria Cultures Found",
       margin: {
         t:30, 
         l: 150,
       },
+    };
 
-    };
-    let barData = {
-      y: yticks,
-      x: sample_values.slice(0,10).reverse,
-      text: otu_labels.slice(0,10).reverse,
+    let barData = [{
       type: "bar",
+      x: topTenSamples,
+      y: yticks,
+      text: topTenLabels,
       orientation: "h"
-    };
+    }];
     Plotly.newPlot("bar", barData, barLayout);
     // Bubble Chart
     var bubbleLayout = {
@@ -101,7 +103,7 @@ function init() {
 
      var firstSample = names[0];
      console.log(firstSample);
-     buildMetaData(firstSample)
+    //  buildMetaData(firstSample)
      buildCharts(firstSample);
   })
 }
