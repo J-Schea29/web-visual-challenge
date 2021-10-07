@@ -1,3 +1,7 @@
+function buildGauge(wfreq){
+  console.log(wfreq)
+}
+
 function buildMetaData(sample) {
   d3.json("samples.json").then(function(data) {
     var metaData = data.metadata;
@@ -8,27 +12,17 @@ function buildMetaData(sample) {
     var dataPanel = d3.select("#sample-metadata");
     dataPanel.html("");
 
-    var personID = resultArray.id
-    console.log(personID);
-    var ethnicity = resultArray.ethnicity
-    console.log(ethnicity);
-    var gender = resultArray.gender
-    console.log(gender);
-    var age = resultArray.age
-    console.log(age);
-    var location = resultArray.location
-    console.log(location);
-    var bbtype = resultArray.bbtype
-    console.log(bbtype);
-    var wfreq = resultArray.wfreq
-    console.log(wfreq);
+
+    Object.entries(result).forEach(function([keys, value]){
+      dataPanel.append("h6").text(` ${keys}: ${value} `);
+    })
+    buildGauge(result.wfreq)
   })
 }
 
 function buildCharts(sample) {
   d3.json("samples.json").then(function(data) {
     var samples = data.samples;
-    console.log(samples)
     var resultArray = samples.filter(function(data){
       return data.id === sample;
     })
@@ -86,13 +80,17 @@ function buildCharts(sample) {
   })
 };
 
+function optionChanged(newSample) {
+  buildCharts(newSample);
+  buildMetaData(newSample);
+}
+
 function init() {
   //select in index.html where you want subject id info
   var selector = d3.select("#selDataset");
   console.log(selector);
   //use d3 to gather json data
   d3.json("samples.json").then(function(data) {
-     console.log(data);
      var names = data.names;
 
      names.forEach(function(name){
